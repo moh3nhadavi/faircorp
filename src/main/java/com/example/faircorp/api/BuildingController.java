@@ -19,8 +19,9 @@ public class BuildingController {
     }
 
     @GetMapping(path = "/{username}")
-    public BuildingDto findByUsername(@PathVariable String username){
+    public Object findByUsername(@PathVariable String username){
         Building building = buildingDao.findByUsernameIgnoreCase(username);
+        if(building == null) return "";
         return new BuildingDto(building);
     }
 }
