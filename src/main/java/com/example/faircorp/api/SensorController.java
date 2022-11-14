@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/sensors")
+@RequestMapping("/api/rooms/{room_id}/sensors")
 public class SensorController {
     private SensorDao sensorDao;
     private RoomDao roomDao;
@@ -23,8 +23,8 @@ public class SensorController {
     }
 
     @GetMapping
-    public List<SensorDto> findAll() {
-        return sensorDao.findAll().stream().map(SensorDto::new).collect(Collectors.toList());
+    public List<SensorDto> findAll(@PathVariable Long room_id) {
+        return sensorDao.findByRoomId(room_id).stream().map(SensorDto::new).collect(Collectors.toList());
     }
 
     @GetMapping(path = "/{id}")
@@ -33,8 +33,8 @@ public class SensorController {
     }
 
     @PostMapping
-    public SensorDto create(@RequestBody SensorDto sensorDto) {
-        Room room = roomDao.getReferenceById(sensorDto.getRoom_id());
+    public SensorDto create(@PathVariable Long room_id, @RequestBody SensorDto sensorDto) {
+        Room room = roomDao.getReferenceById(room_id);
         Sensor sensor = null;
         if (sensorDto.getId() == null) {
             sensor = sensorDao.save(new Sensor(sensorDto.getName(), sensorDto.getTemperature(), room));

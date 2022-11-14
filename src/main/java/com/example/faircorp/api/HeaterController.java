@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/heaters")
+@RequestMapping("/api/rooms/{room_id}/heaters")
 public class HeaterController {
     private HeaterDao heaterDao;
     private RoomDao roomDao;
@@ -24,8 +24,8 @@ public class HeaterController {
     }
 
     @GetMapping
-    public List<HeaterDto> findAll() {
-        return heaterDao.findAll().stream().map(HeaterDto::new).collect(Collectors.toList());
+    public List<HeaterDto> findAll(@PathVariable Long room_id) {
+        return heaterDao.findByRoomId(room_id).stream().map(HeaterDto::new).collect(Collectors.toList());
     }
 
     @GetMapping(path = "/{id}")
@@ -34,8 +34,8 @@ public class HeaterController {
     }
 
     @PostMapping
-    public HeaterDto create(@RequestBody HeaterDto heaterDto) {
-        Room room = roomDao.getReferenceById(heaterDto.getRoom_id());
+    public HeaterDto create(@PathVariable Long room_id, @RequestBody HeaterDto heaterDto) {
+        Room room = roomDao.getReferenceById(room_id);
         Heater heater = null;
         if (heaterDto.getId() == null) {
             heater = heaterDao.save(new Heater(heaterDto.getName(), heaterDto.getPower(), heaterDto.getStatus(), room));
@@ -53,7 +53,7 @@ public class HeaterController {
     @PutMapping(path = "/{id}/switch")
     public HeaterDto switchStatus(@PathVariable Long id) {
         Heater heater = heaterDao.findById(id).orElseThrow(IllegalArgumentException::new);
-        heater.setStatus(heater.getStatus() == HeaterStatus.ON ? HeaterStatus.OFF: HeaterStatus.ON);
+        heater.setStatus(heater.getStatus() == HeaterStatus.ON ? HeaterStatus.OFF : HeaterStatus.ON);
         heater = heaterDao.save(heater);
         return new HeaterDto(heater);
     }

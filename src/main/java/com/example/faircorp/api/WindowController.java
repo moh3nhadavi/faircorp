@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/windows")
+@RequestMapping("/api/rooms/{room_id}/windows")
 public class WindowController {
     private WindowDao windowDao;
     private RoomDao roomDao;
@@ -24,8 +24,8 @@ public class WindowController {
     }
 
     @GetMapping
-    public List<WindowDto> findAll() {
-        return windowDao.findAll().stream().map(WindowDto::new).collect(Collectors.toList());
+    public List<WindowDto> findAll(@PathVariable Long room_id) {
+        return windowDao.findByRoomId(room_id).stream().map(WindowDto::new).collect(Collectors.toList());
     }
 
     @GetMapping(path = "/{id}")
@@ -34,8 +34,8 @@ public class WindowController {
     }
 
     @PostMapping
-    public WindowDto create(@RequestBody WindowDto windowDto) {
-        Room room = roomDao.getReferenceById(windowDto.getRoom_id());
+    public WindowDto create(@PathVariable Long room_id, @RequestBody WindowDto windowDto) {
+        Room room = roomDao.getReferenceById(room_id);
         Window window = null;
         if (windowDto.getId() == null) {
             window = windowDao.save(new Window(windowDto.getName(), windowDto.getStatus(), room));
@@ -52,7 +52,7 @@ public class WindowController {
     @PutMapping(path = "/{id}/switch")
     public WindowDto switchStatus(@PathVariable Long id) {
         Window window = windowDao.findById(id).orElseThrow(IllegalArgumentException::new);
-        window.setStatus(window.getStatus() == WindowStatus.OPEN ? WindowStatus.CLOSE: WindowStatus.OPEN);
+        window.setStatus(window.getStatus() == WindowStatus.OPEN ? WindowStatus.CLOSE : WindowStatus.OPEN);
         window = windowDao.save(window);
         return new WindowDto(window);
     }
