@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/buildings")
+@RequestMapping("/api/buildings")
 public class BuildingController {
     private final BuildingDao buildingDao;
 
