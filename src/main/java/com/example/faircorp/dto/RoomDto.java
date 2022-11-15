@@ -10,6 +10,7 @@ public class RoomDto {
     private Double current_temperature;
     private Double target_temperature;
     private String building_name;
+    private String building_username;
     private Double out_temperature;
 
     public RoomDto() {
@@ -21,6 +22,7 @@ public class RoomDto {
         this.floor = room.getFloor();
         this.current_temperature = room.getCurrent_temperature();
         this.target_temperature = room.getTarget_temperature();
+        this.building_username = room.getBuilding().getUsername();
         this.building_name = room.getBuilding().getName();
         this.out_temperature = room.getBuilding().getOut_temperature();
     }
@@ -80,6 +82,14 @@ public class RoomDto {
 
     public void setBuilding_name(String building_name) {
         this.building_name = building_name;
+    }
+
+    public String getBuilding_username() {
+        return building_username;
+    }
+
+    public void setBuilding_username(String building_username) {
+        this.building_username = building_username;
     }
     //    @ManyToOne
 //    @JoinColumn(name = "building_id")
