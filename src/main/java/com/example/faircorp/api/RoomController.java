@@ -28,11 +28,6 @@ public class RoomController {
 //        return roomDao.findAll().stream().map(RoomDto::new).collect(Collectors.toList());
     }
 
-    @GetMapping(path = "/{id}")
-    public RoomDto findById(@PathVariable Long id) {
-        return roomDao.findById(id).map(RoomDto::new).orElse(null); // (7)
-    }
-
     @GetMapping(path = "/search/{text}")
     public List<RoomDto> findByName(@PathVariable String building_username, @PathVariable String text) {
         return roomDao.findByNameContainsAndBuildingUsernameIgnoreCase(text, building_username).stream().map(RoomDto::new).collect(Collectors.toList());
